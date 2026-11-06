@@ -27,6 +27,9 @@ Sau khi setup, người dùng tự điền hai credential riêng: `YOUR_OMNIROUT
 
 ```json
 {
+  "enabledMcpjsonServers": [
+    "workshop"
+  ],
   "env": {
     "ANTHROPIC_BASE_URL": "https://workshop-ai.vihn.dev",
     "ANTHROPIC_AUTH_TOKEN": "YOUR_OMNIROUTE_API_KEY",
