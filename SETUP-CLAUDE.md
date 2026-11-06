@@ -5,7 +5,7 @@
 Thực hiện trong **project đang mở**, không cài lại server và không sửa global config (`~/.claude/settings.json`, `~/.claude.json`).
 
 1. Merge cấu hình bên dưới vào `.claude/settings.local.json` và `.mcp.json`; giữ nguyên các key/MCP khác. Cài default model và các alias đúng JSON mẫu đã được người dùng yêu cầu; không tự chọn model khác, nới quyền, commit hoặc push.
-2. Để `YOUR_WORKSHOP_TOKEN` ở các trường token chưa được cấu hình; người dùng tự điền sau khi setup. Không hỏi/yêu cầu token hay đường dẫn file token, không tự tìm token từ môi trường, credential hoặc lịch sử.
+2. Để `YOUR_OMNIROUTE_API_KEY` và `YOUR_WORKSHOP_TOKEN` ở các trường credential chưa được cấu hình; người dùng tự điền sau khi setup. Không hỏi/yêu cầu key, token hay đường dẫn file, không tự tìm credential từ môi trường hoặc lịch sử.
 3. Bảo đảm `.claude/settings.local.json` không được Git track và được ignore; dùng `.git/info/exclude` nếu cần. Nếu file đã được track, không ghi secret hoặc tự untrack; báo người dùng cần giữ file riêng trước khi tự điền token. Đặt quyền `0600` khi hệ điều hành hỗ trợ. Không in token ra terminal/chat/log.
 4. `.mcp.json` chỉ chứa `${WORKSHOP_TOKEN}`, không chứa token thật. Token được khai báo trong `env` của settings local và áp dụng sau khi người dùng trust workspace. Không dùng `${ANTHROPIC_AUTH_TOKEN}` trong MCP header: Claude Code cố ý không expand biến credential này cho remote MCP.
 5. Parse JSON để kiểm tra cấu hình; không gọi endpoint cần xác thực khi token vẫn là placeholder, không gửi prompt/gọi model. Không tự bỏ qua workspace trust hay xác nhận cấp quyền.
@@ -19,7 +19,7 @@ Thực hiện trong **project đang mở**, không cài lại server và không 
 | AI cho OpenAI-compatible client | `https://workshop-ai.vihn.dev/v1` |
 | MCP Workshop | `https://workshop-mcp.vihn.dev/mcp` |
 
-Sau khi setup, người dùng tự thay `YOUR_WORKSHOP_TOKEN` bằng token riêng có quyền `ai` và `mcp`; agent không hỏi hoặc yêu cầu cung cấp token. Không commit hoặc chia sẻ token với người khác.
+Sau khi setup, người dùng tự điền hai credential riêng: `YOUR_OMNIROUTE_API_KEY` là API key được quản lý tại OmniRoute cho AI; `YOUR_WORKSHOP_TOKEN` chỉ dùng cho MCP. Agent không hỏi hoặc yêu cầu cung cấp credential. Không commit hoặc chia sẻ secret với người khác.
 
 ## 1. AI: merge vào `.claude/settings.local.json` của project
 
@@ -29,7 +29,7 @@ Sau khi setup, người dùng tự thay `YOUR_WORKSHOP_TOKEN` bằng token riên
 {
   "env": {
     "ANTHROPIC_BASE_URL": "https://workshop-ai.vihn.dev",
-    "ANTHROPIC_AUTH_TOKEN": "YOUR_WORKSHOP_TOKEN",
+    "ANTHROPIC_AUTH_TOKEN": "YOUR_OMNIROUTE_API_KEY",
     "ANTHROPIC_API_KEY": "",
     "WORKSHOP_TOKEN": "YOUR_WORKSHOP_TOKEN",
     "ANTHROPIC_MODEL": "opus[1m]",
@@ -40,7 +40,7 @@ Sau khi setup, người dùng tự thay `YOUR_WORKSHOP_TOKEN` bằng token riên
 }
 ```
 
-Sau khi setup, người dùng tự điền cùng token riêng ở hai giá trị `YOUR_WORKSHOP_TOKEN`. `ANTHROPIC_API_KEY: ""` vô hiệu hóa API key cũ cho project này, tránh gửi đồng thời `Authorization` và `x-api-key`. Không sửa credential global. Managed settings hoặc môi trường do launcher cấp có thể ghi đè cấu hình; không bypass chúng.
+`ANTHROPIC_AUTH_TOKEN` dùng API key OmniRoute; `WORKSHOP_TOKEN` dùng token MCP riêng, không dùng thay cho API key AI. `ANTHROPIC_API_KEY: ""` vô hiệu hóa API key cũ cho project này, tránh gửi đồng thời `Authorization` và `x-api-key`. Không sửa credential global. Managed settings hoặc môi trường do launcher cấp có thể ghi đè cấu hình; không bypass chúng.
 
 ## 2. MCP: tạo `.mcp.json` ở thư mục gốc dự án
 
