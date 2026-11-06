@@ -6,6 +6,12 @@ Sử dụng Claude Code để xây một ứng dụng bảng công việc nhỏ 
 
 Bạn được chọn stack quen thuộc và tự quyết các chi tiết chưa được mô tả trong đề.
 
+**Prompt bắt đầu phiên Workshop MCP:**
+
+```text
+Dùng server MCP workshop của project này để bắt đầu phiên thực hành: hỏi tên hiển thị nếu chưa biết, gọi start_session và dùng session_id trả về cho các lần ghi tiếp theo. Trong quá trình làm bài, chủ động dùng record_visible_event và record_artifact để lưu những trao đổi, quyết định và kết quả kiểm chứng liên quan; không ghi key/token, dữ liệu riêng hoặc suy luận ẩn. Chỉ gọi freeze_session khi tôi yêu cầu kết thúc. Nếu MCP chưa kết nối hoặc tool lỗi, báo đúng trạng thái, không giả vờ đã ghi.
+```
+
 ## Mục đích
 
 Thực hành một workflow làm việc với AI có chủ đích: hiểu vấn đề, xác định phạm vi, lập kế hoạch, chia việc, cung cấp ngữ cảnh phù hợp, triển khai từng bước, kiểm tra và điều chỉnh.
