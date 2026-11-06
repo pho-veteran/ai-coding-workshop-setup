@@ -48,14 +48,6 @@ Trên máy host, token operator hiện có ở `.private/public-host/operator.to
 
 Dùng cùng token riêng ở hai giá trị `YOUR_WORKSHOP_TOKEN`. `ANTHROPIC_API_KEY: ""` vô hiệu hóa API key cũ cho project này, tránh gửi đồng thời `Authorization` và `x-api-key`. Không sửa credential global. Managed settings hoặc môi trường do launcher cấp có thể ghi đè cấu hình; không bypass chúng.
 
-### Model alias đã cấu hình sẵn
-
-Bốn biến model trong JSON được lấy từ `~/.claude/settings.json` của máy host hiện tại. Mặc định cho phiên mới là `opus[1m]`; `/model opus`, `/model sonnet`, `/model haiku` dùng các override tương ứng. Giữ nguyên các alias gateway này, không tự thay bằng model ID Anthropic hoặc model của Codex.
-
-Máy host còn lưu `"model": "sonnet"` ở settings, nhưng `ANTHROPIC_MODEL` có ưu tiên cao hơn trường `model`, nên mẫu chỉ đặt mặc định qua biến môi trường. `--model` hoặc lựa chọn trong phiên có thể ghi đè mặc định này. Không suy ra model của phiên đang chạy chỉ từ settings.
-
-Catalog upstream có các alias gốc `opus`, `sonnet`, `haiku`, không liệt kê các giá trị có hậu tố `[1m]`. Hậu tố được giữ theo cấu hình máy host; chưa gọi model Claude để xác minh inference hoặc dung lượng context thực tế.
-
 ## 2. MCP: tạo `.mcp.json` ở thư mục gốc dự án
 
 **Không đặt `mcpServers` vào `settings.json`.** Claude Code dùng `.mcp.json` cho MCP theo dự án; MCP dùng chung mọi dự án nằm trong `~/.claude.json`.
@@ -75,13 +67,3 @@ Catalog upstream có các alias gốc `opus`, `sonnet`, `haiku`, không liệt k
 ```
 
 Nếu `.mcp.json` đã tồn tại, chỉ merge entry `workshop` vào `mcpServers`. File này không chứa secret nên có thể chia sẻ; `.claude/settings.local.json` chứa token thật phải giữ private và không được commit.
-
-## 3. Sử dụng
-
-Khởi động lại Claude Code trong project, tự xem và chấp thuận workspace/MCP nếu được hỏi, rồi mở `/mcp` kiểm tra server `workshop`. Không tự ghi cờ trust/approval để bỏ qua bước này.
-
-Nhắn Claude: **“Dùng workshop MCP để bắt đầu session và ghi nhận buổi làm bài này.”** MCP không tự thu toàn bộ hội thoại; các message/artifact do client gửi được đánh dấu là client-reported.
-
-Thiếu hoặc sai token Workshop sẽ trả `401`. Nếu MCP initialize thành công nhưng AI `/v1/models` trả `401`, operator cần kiểm tra upstream credential trong cấu hình host; không tự đổi token Workshop hoặc bỏ auth. Máy host, mạng và AI upstream phải đang chạy. AI streaming từng được kiểm chứng bằng một request OpenAI-compatible; chưa chạy model Claude để kiểm thử.
-
-Tài liệu chính thức: [Settings env và thời điểm áp dụng](https://code.claude.com/docs/en/settings-reference#env) · [MCP project scope](https://code.claude.com/docs/en/mcp#project-scope) · [Biến môi trường trong MCP](https://code.claude.com/docs/en/mcp#environment-variable-expansion-in-mcp-json) · [Model và thứ tự ưu tiên](https://code.claude.com/docs/en/model-config#setting-your-model).
